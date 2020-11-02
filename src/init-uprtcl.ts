@@ -100,7 +100,18 @@ export const initUprtcl = async () => {
     ipfsStore,
     proposals
   );
-  const pkdCouncilEvees = new EveesPolkadotCouncil(pkdConnection, ipfsStore);
+
+  const councilConfig = {
+    // duration: Math.round((5.0 * 60.0 * 60.0 * 24.0) / 5.0),
+    duration: Math.round((10.0 * 60.0) / 5.0),
+    quorum: 1.0 / 3.0,
+    thresehold: 0.5,
+  };
+  const pkdCouncilEvees = new EveesPolkadotCouncil(
+    pkdConnection,
+    ipfsStore,
+    councilConfig
+  );
   await pkdEvees.connect();
 
   const evees = new EveesModule([pkdEvees, pkdCouncilEvees]);
