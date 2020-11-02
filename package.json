@@ -4,7 +4,7 @@
   "author": "pepo@collectiveone.org",
   "license": "MIT",
   "scripts": {
-    "build": "rimraf dist && webpack",
+    "build": "rimraf dist-pages && webpack",
     "start": "webpack-dev-server --mode=development",
     "dev": "npm start",
     "deploy": "npm run build && ./deploy.sh prd"
