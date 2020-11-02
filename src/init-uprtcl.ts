@@ -1,20 +1,23 @@
-import IPFS from 'ipfs';
+import IPFS from "ipfs";
 
-import { MicroOrchestrator, i18nextBaseModule } from '@uprtcl/micro-orchestrator';
-import { LensesModule } from '@uprtcl/lenses';
-import { DocumentsModule } from '@uprtcl/documents';
-import { WikisModule } from '@uprtcl/wikis';
-import { EveesModule } from '@uprtcl/evees';
-import { CortexModule } from '@uprtcl/cortex';
-import { ApolloClientModule } from '@uprtcl/graphql';
-import { CidConfig, DiscoveryModule } from '@uprtcl/multiplatform';
+import {
+  MicroOrchestrator,
+  i18nextBaseModule,
+} from "@uprtcl/micro-orchestrator";
+import { LensesModule } from "@uprtcl/lenses";
+import { DocumentsModule } from "@uprtcl/documents";
+import { WikisModule } from "@uprtcl/wikis";
+import { EveesModule } from "@uprtcl/evees";
+import { CortexModule } from "@uprtcl/cortex";
+import { ApolloClientModule } from "@uprtcl/graphql";
+import { CidConfig, DiscoveryModule } from "@uprtcl/multiplatform";
 import {
   PolkadotOrbitDBIdentity,
   PolkadotConnection,
   EveesPolkadotConnection,
   EveesPolkadotCouncil,
-  EveesPolkadotModule
-} from '@uprtcl/evees-polkadot';
+  EveesPolkadotModule,
+} from "@uprtcl/evees-polkadot";
 import {
   ProposalsOrbitDB,
   ProposalStore,
@@ -22,23 +25,26 @@ import {
   ContextStore,
   getProposalsAcl,
   getContextAcl,
-  EveesOrbitDBModule
-} from '@uprtcl/evees-orbitdb';
-import { EveesBlockchainCached, EveesBlockchainModule } from '@uprtcl/evees-blockchain';
-import { IpfsStore } from '@uprtcl/ipfs-provider';
-import { OrbitDBCustom } from '@uprtcl/orbitdb-provider';
+  EveesOrbitDBModule,
+} from "@uprtcl/evees-orbitdb";
+import {
+  EveesBlockchainCached,
+  EveesBlockchainModule,
+} from "@uprtcl/evees-blockchain";
+import { IpfsStore } from "@uprtcl/ipfs-provider";
+import { OrbitDBCustom } from "@uprtcl/orbitdb-provider";
 
-import { env } from './env';
-import { getConnectionDetails } from './connections';
+import { env } from "./env";
+import { getConnectionDetails } from "./connections";
 
 export const initUprtcl = async () => {
-  const polkadotWs = '';
+  const polkadotWs = "";
 
   const ipfsCidConfig: CidConfig = {
     version: 1,
-    type: 'sha2-256',
-    codec: 'raw',
-    base: 'base58btc'
+    type: "sha2-256",
+    codec: "raw",
+    base: "base58btc",
   };
   const ipfsJSConfig = {
     preload: { enabled: false },
@@ -47,16 +53,19 @@ export const initUprtcl = async () => {
     config: {
       init: true,
       Addresses: {
-        Swarm: env.pinner.Swarm
+        Swarm: env.pinner.Swarm,
       },
-      Bootstrap: env.pinner.Bootstrap
-    }
+      Bootstrap: env.pinner.Bootstrap,
+    },
   };
 
   const orchestrator = new MicroOrchestrator();
 
   const connections = getConnectionDetails();
-  const pkdConnection = new PolkadotConnection(connections.connections, connections.current);
+  const pkdConnection = new PolkadotConnection(
+    connections.connections,
+    connections.current
+  );
   await pkdConnection.ready();
 
   const ipfs = await IPFS.create(ipfsJSConfig);
@@ -75,6 +84,7 @@ export const initUprtcl = async () => {
     [getContextAcl([identity]), getProposalsAcl([identity])],
     identity,
     env.pinner.url,
+    env.pinner.peerMultiaddr,
     ipfs
   );
   await orbitDBCustom.ready();
@@ -110,9 +120,9 @@ export const initUprtcl = async () => {
       new EveesPolkadotModule(),
       evees,
       documents,
-      wikis
+      wikis,
     ]);
   } catch (e) {
-    console.error('error loading modules', e);
+    console.error("error loading modules", e);
   }
 };
