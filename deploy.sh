@@ -14,7 +14,7 @@ mkdir stage
 
 cp -r ./dist-pages/* ./stage
 
-bucket="s3://uprtcl-frontend-$env"
+bucket="s3://kusama-intercreativity-$env"
 
 echo $bucket;
 # GZIP encode every css and js files then rename them to remove the .gz ext
