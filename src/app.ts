@@ -1,21 +1,30 @@
-import { LitElement, html, query, css } from 'lit-element';
-import { router, routes } from './router';
+import { LitElement, html, query, css, internalProperty } from "lit-element";
+import { initUprtcl } from "./init-uprtcl";
+import { router, routes } from "./router";
 
-import { sharedStyles } from './styles';
+import { sharedStyles } from "./styles";
 
 export class App extends LitElement {
-  @query('#outlet')
+  @internalProperty()
+  loading: boolean = true;
+
+  @query("#outlet")
   outlet: HTMLElement;
 
   async firstUpdated() {
+    await initUprtcl();
+    this.loading = false;
+    await this.updateComplete;
     router.setOutlet(this.outlet);
     router.setRoutes(routes);
   }
 
   render() {
-    return html`
-      <div id="outlet"></div>
-    `;
+    if (this.loading) {
+      return html`loading...`;
+    }
+
+    return html` <div id="outlet"></div> `;
   }
 
   static get styles() {
@@ -41,7 +50,7 @@ export class App extends LitElement {
           display: flex;
           flex-direction: column;
         }
-      `
+      `,
     ];
   }
 }

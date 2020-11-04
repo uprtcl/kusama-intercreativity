@@ -1,17 +1,11 @@
-const peerPath = `/dns4/localhost/tcp/4003/ws/p2p`;
-const peerId = "QmVvXJvzYhNWaJ2S4EKBxav6U5p7txAEW2v2uTVvdeAJQp";
+const peerPath = `/dns4/pinner.intercreativity.io/tcp/4003/wss/p2p`;
+const peerId = "QmetdpjRspEHdfQKR8sFGTf54NHFHbpAMWz3wBhzjSDaF5";
 const env = {
   pinner: {
-    url: "http://localhost:3100",
+    url: "https://apps.intercreativity.io:3000",
     Swarm: [],
     Bootstrap: [`${peerPath}/${peerId}`],
     peerMultiaddr: `${peerPath}/${peerId}`,
-  },
-  ethers: {
-    apiKeys: {
-      etherscan: "6H4I43M46DJ4IJ9KKR8SFF1MF2TMUQTS2F",
-      infura: "73e0929fc849451dae4662585aea9a7b",
-    },
   },
 };
 

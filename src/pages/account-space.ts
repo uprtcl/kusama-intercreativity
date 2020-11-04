@@ -1,15 +1,19 @@
-import { LitElement, html, css, property, internalProperty } from 'lit-element';
+import { LitElement, html, css, property, internalProperty } from "lit-element";
 
-import { moduleConnect } from '@uprtcl/micro-orchestrator';
+import { moduleConnect } from "@uprtcl/micro-orchestrator";
 
-import { Logger } from '@uprtcl/micro-orchestrator';
-import { ApolloClientModule } from '@uprtcl/graphql';
-import { EveesModule, EveesRemote } from '@uprtcl/evees';
+import { Logger } from "@uprtcl/micro-orchestrator";
+import { ApolloClientModule } from "@uprtcl/graphql";
+import { EveesModule, EveesRemote } from "@uprtcl/evees";
 
-import { Router } from '@vaadin/router';
+import { Router } from "@vaadin/router";
+import { router } from "../router";
 
 export class AccountSpace extends moduleConnect(LitElement) {
-  logger = new Logger('Account space');
+  logger = new Logger("Account space");
+
+  @property({ type: Object })
+  location = router.location;
 
   @internalProperty()
   perspectiveId!: string;
@@ -25,14 +29,32 @@ export class AccountSpace extends moduleConnect(LitElement) {
 
   async firstUpdated() {
     this.client = this.request(ApolloClientModule.bindings.Client);
-    this.defaultRemote = (this.request(EveesModule.bindings.Config) as any).defaultRemote;
-    await this.defaultRemote.ready();
 
-    this.load();
+    this.defaultRemote = (this.request(
+      EveesModule.bindings.Config
+    ) as any).defaultRemote;
+
+    // this.load();
   }
 
-  async load() {
-    this.loading = true;
+  updated(changedProperties) {
+    if (changedProperties.has("location")) {
+      this.checkUrl();
+    }
+  }
+
+  checkUrl() {
+    if (!this.location.params.homeId) {
+      this.goToLoggedUserHome();
+    } else {
+      this.perspectiveId = this.location.params.homeId as string;
+      this.loading = false;
+    }
+  }
+
+  async goToLoggedUserHome() {
+    await this.defaultRemote.ready();
+
     this.isLogged = await this.defaultRemote.isLogged();
 
     if (!this.isLogged) {
@@ -40,33 +62,31 @@ export class AccountSpace extends moduleConnect(LitElement) {
       return;
     }
 
-    const homePerspective = await this.defaultRemote.getHome(this.defaultRemote.userId);
-    await this.defaultRemote.store.create(homePerspective.object);
-    this.perspectiveId = homePerspective.id;
-
-    this.logger.log(
-      `Home perspective ${this.perspectiveId} found for user ${this.defaultRemote.userId}`
+    const homePerspective = await this.defaultRemote.getHome(
+      this.defaultRemote.userId
     );
+    await this.defaultRemote.store.create(homePerspective.object);
+    const perspectiveId = homePerspective.id;
 
-    this.loading = false;
+    Router.go(`/account/${perspectiveId}`);
   }
 
   async login() {
     await this.defaultRemote.login();
-    this.load();
+    this.checkUrl();
   }
 
   render() {
     if (this.loading) {
-      return html`
-        <uprtcl-loading></uprtcl-loading>
-      `;
+      return html` <uprtcl-loading></uprtcl-loading> `;
     }
 
     return html`
       ${!this.isLogged
         ? html`
-            <uprtcl-button class="login-button" @click=${() => this.login()}>login</uprtcl-button>
+            <uprtcl-button class="login-button" @click=${() => this.login()}
+              >login</uprtcl-button
+            >
           `
         : html`
             <wiki-drawer
