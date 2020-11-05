@@ -1,4 +1,5 @@
 import { LitElement, html, query, css, internalProperty } from "lit-element";
+import { icons } from "@uprtcl/common-ui";
 import { initUprtcl } from "./init-uprtcl";
 import { router, routes } from "./router";
 
@@ -21,7 +22,7 @@ export class App extends LitElement {
 
   render() {
     if (this.loading) {
-      return html`loading...`;
+      return html`<div class="loading">${icons.loading}</div>`;
     }
 
     return html` <div id="outlet"></div> `;
@@ -36,6 +37,7 @@ export class App extends LitElement {
           flex-direction: column;
           display: flex;
           justify-content: center;
+          align-items: center;
         }
 
         #outlet {
@@ -43,12 +45,17 @@ export class App extends LitElement {
           display: flex;
           flex-direction: column;
           overflow: auto;
+          width: 100%;
         }
 
         layout {
           flex-grow: 1;
           display: flex;
           flex-direction: column;
+        }
+        .loading svg {
+          height: 30px;
+          width: 30px;
         }
       `,
     ];

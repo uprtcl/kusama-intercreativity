@@ -9,6 +9,7 @@ const routes = [
     component: "layout",
     children: [
       { path: "/", component: "kusama-home" },
+      { path: "/reader", component: "evees-reader" },
       { path: "/council", component: "council-space" },
       { path: "/account", component: "account-space" },
       { path: "/account/:homeId", component: "account-space" },
