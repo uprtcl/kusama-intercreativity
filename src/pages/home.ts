@@ -10,7 +10,9 @@ export class Home extends moduleConnect(LitElement) {
   defaultRemote!: EveesRemote;
 
   async firstUpdated() {
-    this.defaultRemote = (this.request(EveesModule.bindings.Config) as any).defaultRemote;
+    this.defaultRemote = (this.request(
+      EveesModule.bindings.Config
+    ) as any).defaultRemote;
     await this.defaultRemote.ready();
     this.load();
   }
@@ -46,6 +48,9 @@ export class Home extends moduleConnect(LitElement) {
         : html`
             <uprtcl-button @click=${() => this.login()}>login</uprtcl-button>
           `}
+      <a @click=${() => Router.go('/reader')} href="/reader">
+        <uprtcl-button>Reader</uprtcl-button>
+      </a>
     `;
   }
 

@@ -37,6 +37,8 @@ import { OrbitDBCustom } from "@uprtcl/orbitdb-provider";
 import { env } from "./env";
 import { getConnectionDetails } from "./connections";
 
+export let ipfs: any = null;
+
 export const initUprtcl = async () => {
   const polkadotWs = "";
 
@@ -67,8 +69,7 @@ export const initUprtcl = async () => {
     connections.current
   );
   await pkdConnection.ready();
-
-  const ipfs = await IPFS.create(ipfsJSConfig);
+  ipfs = await IPFS.create(ipfsJSConfig);
 
   console.log(`${env.pinner.peerMultiaddr} connecting...`);
   await ipfs.swarm.connect(env.pinner.peerMultiaddr);
