@@ -21,7 +21,9 @@
       "lit-html": ["node_modules/lit-html"],
       "lit-html*": ["node_modules/lit-html/*"],
       "inversify": ["node_modules/inversify"],
-      "inversify/*": ["node_modules/inversify/*"]
+      "inversify/*": ["node_modules/inversify/*"],
+      "@uprtcl/orbitdb-provider": ["node_modules/@uprtcl/orbitdb-provider"],
+      "@uprtcl/orbitdb-provider/*": ["node_modules/@uprtcl/orbitdb-provider/*"]
     }
   },
   "include": ["src"],

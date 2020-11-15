@@ -120,21 +120,17 @@ export const initUprtcl = async () => {
   const documents = new DocumentsModule();
   const wikis = new WikisModule();
 
-  try {
-    await orchestrator.loadModules([
-      new i18nextBaseModule(),
-      new ApolloClientModule(),
-      new CortexModule(),
-      new DiscoveryModule([pkdEvees.id]),
-      new LensesModule(),
-      new EveesBlockchainModule(),
-      new EveesOrbitDBModule(),
-      new EveesPolkadotModule(),
-      evees,
-      documents,
-      wikis,
-    ]);
-  } catch (e) {
-    console.error('error loading modules', e);
-  }
+  await orchestrator.loadModules([
+    new i18nextBaseModule(),
+    new ApolloClientModule(),
+    new CortexModule(),
+    new DiscoveryModule([pkdEvees.id]),
+    new LensesModule(),
+    new EveesBlockchainModule(),
+    new EveesOrbitDBModule(),
+    new EveesPolkadotModule(),
+    evees,
+    documents,
+    wikis,
+  ]);
 };
