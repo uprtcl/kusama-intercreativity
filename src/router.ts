@@ -9,7 +9,7 @@ const routes = [
     component: 'layout',
     children: [
       { path: '/', component: 'kusama-home' },
-      { path: '/debug', component: 'evees-debug' },
+      { path: '/debug', component: 'evees-orbitdb-set-debugger' },
       { path: '/reader', component: 'evees-reader' },
       { path: '/council', component: 'council-space' },
       { path: '/account', component: 'account-space' },
