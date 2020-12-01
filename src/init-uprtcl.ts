@@ -22,6 +22,7 @@ import {
   ProposalsOrbitDB,
   ProposalStore,
   ProposalsToPerspectiveStore,
+  PerspectiveStore,
   ContextStore,
   getProposalsAcl,
   getContextAcl,
@@ -81,7 +82,12 @@ export const initUprtcl = async () => {
   const identity = new PolkadotOrbitDBIdentity(pkdConnection);
 
   const orbitDBCustom = new OrbitDBCustom(
-    [ContextStore, ProposalStore, ProposalsToPerspectiveStore],
+    [
+      PerspectiveStore,
+      ContextStore,
+      ProposalStore,
+      ProposalsToPerspectiveStore,
+    ],
     [getContextAcl([identity]), getProposalsAcl([identity])],
     identity,
     env.pinner.url,

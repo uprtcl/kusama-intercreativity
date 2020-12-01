@@ -18,8 +18,9 @@ export class Doc extends moduleConnect(LitElement) {
     this.loading = true;
     this.docId = window.location.pathname.split('/')[2];
 
-    const defaultRemote = (this.requestAll(EveesModule.bindings.Config) as EveesConfig)
-      .defaultRemote;
+    const defaultRemote = (this.requestAll(
+      EveesModule.bindings.Config
+    ) as EveesConfig).defaultRemote;
 
     await defaultRemote.connect();
     this.defaultRemote = defaultRemote.id;
@@ -32,17 +33,21 @@ export class Doc extends moduleConnect(LitElement) {
 
   render() {
     if (this.docId === undefined) return '';
-    if (this.loading)
-      return html`
-        <uprtcl-loading></uprtcl-loading>
-      `;
+    if (this.loading) return html` <uprtcl-loading></uprtcl-loading> `;
+
+    const eveesInfoConfig = {
+      showDraftControl: true,
+      showInfo: true,
+      showIcon: true,
+      checkOwner: true,
+      showAcl: true,
+    };
 
     return html`
       <wiki-drawer
         @back=${() => this.goHome()}
         uref=${this.docId}
-        default-remote=${this.defaultRemote}
-        .editableRemotes=${[this.defaultRemote]}
+        .eveesInfoConfig=${eveesInfoConfig}
       ></wiki-drawer>
     `;
   }

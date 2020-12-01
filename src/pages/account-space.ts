@@ -4,7 +4,7 @@ import { moduleConnect } from "@uprtcl/micro-orchestrator";
 
 import { Logger } from "@uprtcl/micro-orchestrator";
 import { ApolloClientModule } from "@uprtcl/graphql";
-import { EveesModule, EveesRemote } from "@uprtcl/evees";
+import { EveesModule, EveesRemote, EveesInfoConfig } from "@uprtcl/evees";
 
 import { Router } from "@vaadin/router";
 import { router } from "../router";
@@ -81,6 +81,13 @@ export class AccountSpace extends moduleConnect(LitElement) {
       return html` <uprtcl-loading></uprtcl-loading> `;
     }
 
+    const eveesInfoConfig: EveesInfoConfig = {
+      showProposals: true,
+      showDraftControl: true,
+      showInfo: true,
+      showIcon: true,
+    };
+
     return html`
       ${!this.isLogged
         ? html`
@@ -91,9 +98,9 @@ export class AccountSpace extends moduleConnect(LitElement) {
         : html`
             <wiki-drawer
               uref=${this.perspectiveId}
-              show-back
-              show-proposals
               @back=${() => Router.go(`/`)}
+              .eveesInfoConfig=${eveesInfoConfig}
+              show-back
             ></wiki-drawer>
           `}
     `;

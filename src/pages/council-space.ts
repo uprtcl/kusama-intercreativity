@@ -21,7 +21,9 @@ export class CouncilSpace extends moduleConnect(LitElement) {
 
   async firstUpdated() {
     this.client = this.request(ApolloClientModule.bindings.Client);
-    this.remote = (this.request(EveesModule.bindings.Config) as any).officialRemote;
+    this.remote = (this.request(
+      EveesModule.bindings.Config
+    ) as any).officialRemote;
     await this.remote.ready();
 
     this.load();
@@ -41,17 +43,22 @@ export class CouncilSpace extends moduleConnect(LitElement) {
 
   render() {
     if (this.loading) {
-      return html`
-        <uprtcl-loading></uprtcl-loading>
-      `;
+      return html` <uprtcl-loading></uprtcl-loading> `;
     }
+
+    const eveesInfoConfig = {
+      showDraftControl: true,
+      showInfo: true,
+      showIcon: true,
+      checkOwner: true,
+      showProposals: true,
+    };
 
     return html`
       <wiki-drawer
         uref=${this.perspectiveId}
         show-back
-        show-proposals
-        check-owner
+        .eveesInfoConfig=${eveesInfoConfig}
         @back=${() => Router.go(`/`)}
       ></wiki-drawer>
     `;
