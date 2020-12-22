@@ -1,6 +1,6 @@
 const peerPath = `/dns4/pinner.intercreativity.io/tcp/4003/wss/p2p`;
 // const peerPath = `/dns4/localhost/tcp/4003/ws/p2p`;
-const peerId = 'QmVD8LC6vjAHaDgsLySc86BVbnb256LuRZqsWtK5toABsc';
+const peerId = 'QmZYVFpmDxv8V2pq8wfEeyZB5GCRz8St9iChjznbRoi4yA';
 const env = {
   pinner: {
     url: 'https://apps.intercreativity.io:3000', // 'http://localhost:3100' 'https://apps.intercreativity.io:3000',

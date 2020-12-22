@@ -32,7 +32,7 @@ import {
   EveesBlockchainCached,
   EveesBlockchainModule,
 } from '@uprtcl/evees-blockchain';
-import { IpfsStore } from '@uprtcl/ipfs-provider';
+import { IpfsStore, PinnerCached } from '@uprtcl/ipfs-provider';
 import { OrbitDBCustom } from '@uprtcl/orbitdb-provider';
 
 import { env } from './env';
@@ -76,7 +76,8 @@ export const initUprtcl = async () => {
   await ipfs.swarm.connect(env.pinner.peerMultiaddr);
   console.log(`${env.pinner.peerMultiaddr} connected!`);
 
-  const ipfsStore = new IpfsStore(ipfsCidConfig, ipfs, env.pinner.url);
+  const pinner = new PinnerCached(env.pinner.url, 10000);
+  const ipfsStore = new IpfsStore(ipfsCidConfig, ipfs, pinner);
   await ipfsStore.ready();
 
   const identity = new PolkadotOrbitDBIdentity(pkdConnection);
@@ -90,7 +91,7 @@ export const initUprtcl = async () => {
     ],
     [getContextAcl([identity]), getProposalsAcl([identity])],
     identity,
-    env.pinner.url,
+    pinner,
     env.pinner.peerMultiaddr,
     ipfs
   );

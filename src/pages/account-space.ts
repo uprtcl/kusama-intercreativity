@@ -1,16 +1,16 @@
-import { LitElement, html, css, property, internalProperty } from "lit-element";
+import { LitElement, html, css, property, internalProperty } from 'lit-element';
 
-import { moduleConnect } from "@uprtcl/micro-orchestrator";
+import { moduleConnect } from '@uprtcl/micro-orchestrator';
 
-import { Logger } from "@uprtcl/micro-orchestrator";
-import { ApolloClientModule } from "@uprtcl/graphql";
-import { EveesModule, EveesRemote, EveesInfoConfig } from "@uprtcl/evees";
+import { Logger } from '@uprtcl/micro-orchestrator';
+import { ApolloClientModule } from '@uprtcl/graphql';
+import { EveesModule, EveesRemote, EveesInfoConfig } from '@uprtcl/evees';
 
-import { Router } from "@vaadin/router";
-import { router } from "../router";
+import { Router } from '@vaadin/router';
+import { router } from '../router';
 
 export class AccountSpace extends moduleConnect(LitElement) {
-  logger = new Logger("Account space");
+  logger = new Logger('Account space');
 
   @property({ type: Object })
   location = router.location;
@@ -38,7 +38,7 @@ export class AccountSpace extends moduleConnect(LitElement) {
   }
 
   updated(changedProperties) {
-    if (changedProperties.has("location")) {
+    if (changedProperties.has('location')) {
       this.checkUrl();
     }
   }
@@ -86,6 +86,7 @@ export class AccountSpace extends moduleConnect(LitElement) {
       showDraftControl: true,
       showInfo: true,
       showIcon: true,
+      showDebugInfo: false,
     };
 
     return html`
