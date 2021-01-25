@@ -1,23 +1,16 @@
-import IPFS from "ipfs";
+import IPFS from 'ipfs';
 
-import {
-  MicroOrchestrator,
-  i18nextBaseModule,
-} from "@uprtcl/micro-orchestrator";
-import { LensesModule } from "@uprtcl/lenses";
-import { DocumentsModule } from "@uprtcl/documents";
-import { WikisModule } from "@uprtcl/wikis";
-import { EveesModule } from "@uprtcl/evees";
-import { CortexModule } from "@uprtcl/cortex";
-import { ApolloClientModule } from "@uprtcl/graphql";
-import { CidConfig, DiscoveryModule } from "@uprtcl/multiplatform";
+import { DocumentsModule } from '@uprtcl/documents';
+import { WikisModule } from '@uprtcl/wikis';
+import { EveesModule } from '@uprtcl/evees';
+
 import {
   PolkadotOrbitDBIdentity,
   PolkadotConnection,
   EveesPolkadotConnection,
   EveesPolkadotCouncil,
   EveesPolkadotModule,
-} from "@uprtcl/evees-polkadot";
+} from '@uprtcl/evees-polkadot';
 import {
   ProposalsOrbitDB,
   ProposalStore,
@@ -26,27 +19,27 @@ import {
   getProposalsAcl,
   getContextAcl,
   EveesOrbitDBModule,
-} from "@uprtcl/evees-orbitdb";
+} from '@uprtcl/evees-orbitdb';
 import {
   EveesBlockchainCached,
   EveesBlockchainModule,
-} from "@uprtcl/evees-blockchain";
-import { IpfsStore } from "@uprtcl/ipfs-provider";
-import { OrbitDBCustom } from "@uprtcl/orbitdb-provider";
+} from '@uprtcl/evees-blockchain';
+import { IpfsStore } from '@uprtcl/ipfs-provider';
+import { OrbitDBCustom } from '@uprtcl/orbitdb-provider';
 
-import { env } from "./env";
-import { getConnectionDetails } from "./connections";
+import { env } from './env';
+import { getConnectionDetails } from './connections';
 
 export let ipfs: any = null;
 
 export const initUprtcl = async () => {
-  const polkadotWs = "";
+  const polkadotWs = '';
 
   const ipfsCidConfig: CidConfig = {
     version: 1,
-    type: "sha2-256",
-    codec: "raw",
-    base: "base58btc",
+    type: 'sha2-256',
+    codec: 'raw',
+    base: 'base58btc',
   };
   const ipfsJSConfig = {
     preload: { enabled: false },
@@ -135,6 +128,6 @@ export const initUprtcl = async () => {
       wikis,
     ]);
   } catch (e) {
-    console.error("error loading modules", e);
+    console.error('error loading modules', e);
   }
 };
