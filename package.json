@@ -1,6 +1,6 @@
 {
   "name": "kusama-intercreativity",
-  "version": "0.0.1-alpha.01",
+  "version": "0.0.2",
   "author": "pepo@collectiveone.org",
   "license": "MIT",
   "scripts": {
@@ -10,15 +10,15 @@
     "deploy": "npm run build && ./deploy.sh prd"
   },
   "dependencies": {
-    "@uprtcl/common-ui": "^0.1.1",
-    "@uprtcl/documents": "^0.1.1",
-    "@uprtcl/evees": "^0.1.1",
-    "@uprtcl/wikis": "^0.1.1",
-    "@uprtcl/evees-blockchain": "^0.1.0-beta.5",
-    "@uprtcl/evees-orbitdb": "^0.1.0-beta.5",
-    "@uprtcl/evees-polkadot": "^0.1.0-beta.5",
-    "@uprtcl/ipfs-provider": "^0.1.0-beta.4",
-    "@uprtcl/orbitdb-provider": "^0.1.0-beta.4",
+    "@uprtcl/common-ui": "^0.2.0",
+    "@uprtcl/documents": "^0.2.0",
+    "@uprtcl/evees": "^0.2.0",
+    "@uprtcl/wikis": "^0.2.0",
+    "@uprtcl/evees-blockchain": "^0.2.0",
+    "@uprtcl/evees-orbitdb": "^0.2.0",
+    "@uprtcl/evees-polkadot": "^0.2.0",
+    "@uprtcl/ipfs-provider": "^0.2.0",
+    "@uprtcl/orbitdb-provider": "^0.2.0",
     "@vaadin/router": "^1.7.2",
     "ipfs": "^0.50.2",
     "lit-element": "^2.2.3"

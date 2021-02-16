@@ -1,16 +1,11 @@
-import { LitElement, html, css, property, internalProperty } from "lit-element";
+import { LitElement, html, css, property, internalProperty } from 'lit-element';
 
-import { moduleConnect } from "@uprtcl/micro-orchestrator";
+import { Router } from '@vaadin/router';
+import { router } from '../router';
+import { Logger, RemoteEvees, servicesConnect } from '@uprtcl/evees';
 
-import { Logger } from "@uprtcl/micro-orchestrator";
-import { ApolloClientModule } from "@uprtcl/graphql";
-import { EveesModule, EveesRemote } from "@uprtcl/evees";
-
-import { Router } from "@vaadin/router";
-import { router } from "../router";
-
-export class AccountSpace extends moduleConnect(LitElement) {
-  logger = new Logger("Account space");
+export class AccountSpace extends servicesConnect(LitElement) {
+  logger = new Logger('Account space');
 
   @property({ type: Object })
   location = router.location;
@@ -25,20 +20,15 @@ export class AccountSpace extends moduleConnect(LitElement) {
   isLogged: boolean = true;
 
   client!: any;
-  defaultRemote!: EveesRemote;
+  defaultRemote!: RemoteEvees;
 
   async firstUpdated() {
-    this.client = this.request(ApolloClientModule.bindings.Client);
-
-    this.defaultRemote = (this.request(
-      EveesModule.bindings.Config
-    ) as any).defaultRemote;
-
+    this.defaultRemote = this.evees.getRemote();
     // this.load();
   }
 
   updated(changedProperties) {
-    if (changedProperties.has("location")) {
+    if (changedProperties.has('location')) {
       this.checkUrl();
     }
   }
@@ -62,10 +52,7 @@ export class AccountSpace extends moduleConnect(LitElement) {
       return;
     }
 
-    const homePerspective = await this.defaultRemote.getHome(
-      this.defaultRemote.userId
-    );
-    await this.defaultRemote.store.create(homePerspective.object);
+    const homePerspective = await this.evees.getHome(this.defaultRemote.id);
     const perspectiveId = homePerspective.id;
 
     Router.go(`/account/${perspectiveId}`);

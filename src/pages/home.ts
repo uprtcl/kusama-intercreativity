@@ -1,18 +1,15 @@
 import { LitElement, html, css, internalProperty } from 'lit-element';
-import { moduleConnect } from '@uprtcl/micro-orchestrator';
-import { EveesModule, EveesRemote } from '@uprtcl/evees';
+import { RemoteEvees, servicesConnect } from '@uprtcl/evees';
 import { Router } from '@vaadin/router';
 
-export class Home extends moduleConnect(LitElement) {
+export class Home extends servicesConnect(LitElement) {
   @internalProperty()
   isLogged: boolean = false;
 
-  defaultRemote!: EveesRemote;
+  defaultRemote!: RemoteEvees;
 
   async firstUpdated() {
-    this.defaultRemote = (this.request(
-      EveesModule.bindings.Config
-    ) as any).defaultRemote;
+    this.defaultRemote = this.evees.getRemote();
     await this.defaultRemote.ready();
     this.load();
   }

@@ -2,45 +2,32 @@ import IPFS from 'ipfs';
 
 import { DocumentsModule } from '@uprtcl/documents';
 import { WikisModule } from '@uprtcl/wikis';
-import { EveesModule } from '@uprtcl/evees';
 
 import {
   PolkadotOrbitDBIdentity,
   PolkadotConnection,
   EveesPolkadotConnection,
   EveesPolkadotCouncil,
-  EveesPolkadotModule,
+  EveesPolkadotWrapper,
 } from '@uprtcl/evees-polkadot';
 import {
-  ProposalsOrbitDB,
-  ProposalStore,
   ProposalsToPerspectiveStore,
   ContextStore,
-  getProposalsAcl,
   getContextAcl,
-  EveesOrbitDBModule,
 } from '@uprtcl/evees-orbitdb';
-import {
-  EveesBlockchainCached,
-  EveesBlockchainModule,
-} from '@uprtcl/evees-blockchain';
 import { IpfsStore } from '@uprtcl/ipfs-provider';
 import { OrbitDBCustom } from '@uprtcl/orbitdb-provider';
 
 import { env } from './env';
 import { getConnectionDetails } from './connections';
+import { PinnerConfig } from '@uprtcl/evees-polkadot/dist/types/wrapper/evees.polkadot.wrapper';
+import { eveesConstructorHelper, MultiContainer } from '@uprtcl/evees';
 
 export let ipfs: any = null;
 
 export const initUprtcl = async () => {
   const polkadotWs = '';
 
-  const ipfsCidConfig: CidConfig = {
-    version: 1,
-    type: 'sha2-256',
-    codec: 'raw',
-    base: 'base58btc',
-  };
   const ipfsJSConfig = {
     preload: { enabled: false },
     relay: { enabled: true, hop: { enabled: true, active: true } },
@@ -54,80 +41,17 @@ export const initUprtcl = async () => {
     },
   };
 
-  const orchestrator = new MicroOrchestrator();
-
-  const connections = getConnectionDetails();
-  const pkdConnection = new PolkadotConnection(
-    connections.connections,
-    connections.current
-  );
-  await pkdConnection.ready();
   ipfs = await IPFS.create(ipfsJSConfig);
 
-  console.log(`${env.pinner.peerMultiaddr} connecting...`);
-  await ipfs.swarm.connect(env.pinner.peerMultiaddr);
-  console.log(`${env.pinner.peerMultiaddr} connected!`);
-
-  const ipfsStore = new IpfsStore(ipfsCidConfig, ipfs, env.pinner.url);
-  await ipfsStore.ready();
-
-  const identity = new PolkadotOrbitDBIdentity(pkdConnection);
-
-  const orbitDBCustom = new OrbitDBCustom(
-    [ContextStore, ProposalStore, ProposalsToPerspectiveStore],
-    [getContextAcl([identity]), getProposalsAcl([identity])],
-    identity,
-    env.pinner.url,
-    env.pinner.peerMultiaddr,
-    ipfs
-  );
-  await orbitDBCustom.ready();
-
-  const proposals = new ProposalsOrbitDB(orbitDBCustom, ipfsStore);
-
-  const pdkEveesConnection = new EveesPolkadotConnection(pkdConnection);
-  await pdkEveesConnection.ready();
-
-  const pkdEvees = new EveesBlockchainCached(
-    pdkEveesConnection,
-    orbitDBCustom,
-    ipfsStore,
-    proposals
-  );
-
-  const councilConfig = {
-    // duration: Math.round((5.0 * 60.0 * 60.0 * 24.0) / 5.0),
-    duration: Math.round((10.0 * 60.0) / 5.0),
-    quorum: 1.0 / 3.0,
-    thresehold: 0.5,
+  const pinnerConfig: PinnerConfig = {
+    url: env.pinner.url,
+    peerMultiaddr: env.pinner.peerMultiaddr,
   };
-  const pkdCouncilEvees = new EveesPolkadotCouncil(
-    pkdConnection,
-    ipfsStore,
-    councilConfig
-  );
-  await pkdEvees.connect();
 
-  const evees = new EveesModule([pkdEvees, pkdCouncilEvees]);
+  const wrapper = new EveesPolkadotWrapper(ipfs, pinnerConfig);
+  await wrapper.load();
 
-  const documents = new DocumentsModule();
-  const wikis = new WikisModule();
+  const evees = eveesConstructorHelper(wrapper.remotes, modules);
 
-  try {
-    await orchestrator.loadModules([
-      new i18nextBaseModule(),
-      new ApolloClientModule(),
-      new CortexModule(),
-      new DiscoveryModule([pkdEvees.id]),
-      new LensesModule(),
-      new EveesBlockchainModule(),
-      new EveesOrbitDBModule(),
-      new EveesPolkadotModule(),
-      evees,
-      documents,
-      wikis,
-    ]);
-  } catch (e) {
-    console.error('error loading modules', e);
-  }
+  customElements.define('app-container', MultiContainer(evees));
 };

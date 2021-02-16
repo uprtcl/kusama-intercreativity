@@ -1,14 +1,11 @@
 import { LitElement, html, css, property, internalProperty } from 'lit-element';
 
-import { Logger } from '@uprtcl/micro-orchestrator';
-import { ApolloClientModule } from '@uprtcl/graphql';
-import { EveesModule, EveesRemote } from '@uprtcl/evees';
+import { Logger, RemoteEvees, servicesConnect } from '@uprtcl/evees';
 
-import { moduleConnect } from '@uprtcl/micro-orchestrator';
 import { Router } from '@vaadin/router';
 
-export class CouncilSpace extends moduleConnect(LitElement) {
-  logger = new Logger('Account space');
+export class CouncilSpace extends servicesConnect(LitElement) {
+  logger = new Logger('Council space');
 
   @internalProperty()
   perspectiveId!: string;
@@ -16,12 +13,10 @@ export class CouncilSpace extends moduleConnect(LitElement) {
   @internalProperty()
   loading: boolean = true;
 
-  client!: any;
-  remote!: EveesRemote;
+  remote!: RemoteEvees;
 
   async firstUpdated() {
-    this.client = this.request(ApolloClientModule.bindings.Client);
-    this.remote = (this.request(EveesModule.bindings.Config) as any).officialRemote;
+    this.remote = this.evees.findRemote('council');
     await this.remote.ready();
 
     this.load();
@@ -30,8 +25,7 @@ export class CouncilSpace extends moduleConnect(LitElement) {
   async load() {
     this.loading = true;
 
-    const homePerspective = await this.remote.getHome();
-    await this.remote.store.create(homePerspective.object);
+    const homePerspective = await this.evees.getHome(this.remote.id);
     this.perspectiveId = homePerspective.id;
 
     this.logger.log(`Home perspective ${this.perspectiveId} found`);
@@ -41,9 +35,7 @@ export class CouncilSpace extends moduleConnect(LitElement) {
 
   render() {
     if (this.loading) {
-      return html`
-        <uprtcl-loading></uprtcl-loading>
-      `;
+      return html` <uprtcl-loading></uprtcl-loading> `;
     }
 
     return html`
