@@ -43,11 +43,8 @@ export class Home extends servicesConnect(LitElement) {
             </a>
           `
         : html`
-            <uprtcl-button @click=${() => this.login()}>login</uprtcl-button>
+            <uprtcl-button @click=${() => this.login()}>Login</uprtcl-button>
           `}
-      <a @click=${() => Router.go('/reader')} href="/reader">
-        <uprtcl-button>Reader</uprtcl-button>
-      </a>
     `;
   }
 

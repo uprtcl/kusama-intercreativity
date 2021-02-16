@@ -53,6 +53,8 @@ export class AccountSpace extends servicesConnect(LitElement) {
     }
 
     const homePerspective = await this.evees.getHome(this.defaultRemote.id);
+    /** make sure the home perspective is stored */
+    await this.evees.client.store.flush();
     const perspectiveId = homePerspective.id;
 
     Router.go(`/account/${perspectiveId}`);
