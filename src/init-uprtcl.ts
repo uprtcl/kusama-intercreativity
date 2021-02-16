@@ -21,7 +21,11 @@ import { OrbitDBCustom } from '@uprtcl/orbitdb-provider';
 import { env } from './env';
 import { getConnectionDetails } from './connections';
 import { PinnerConfig } from '@uprtcl/evees-polkadot/dist/types/wrapper/evees.polkadot.wrapper';
-import { eveesConstructorHelper, MultiContainer } from '@uprtcl/evees';
+import {
+  eveesConstructorHelper,
+  EveesContentModule,
+  MultiContainer,
+} from '@uprtcl/evees';
 
 export let ipfs: any = null;
 
@@ -51,7 +55,15 @@ export const initUprtcl = async () => {
   const wrapper = new EveesPolkadotWrapper(ipfs, pinnerConfig);
   await wrapper.load();
 
-  const evees = eveesConstructorHelper(wrapper.remotes, modules);
+  const modules = new Map<string, EveesContentModule>();
+  modules.set(DocumentsModule.id, new DocumentsModule());
+  modules.set(WikisModule.id, new WikisModule());
+
+  const evees = eveesConstructorHelper(
+    wrapper.remotes,
+    [wrapper.ipfsStore],
+    modules
+  );
 
   customElements.define('app-container', MultiContainer(evees));
 };
